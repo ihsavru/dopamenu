@@ -6,6 +6,7 @@ export type MenuItemType =
   | "specials"
 
 export type MenuItem = {
+  id: string
   name: string
   durationInSeconds?: number
   description?: string
@@ -15,4 +16,5 @@ export type MenuItem = {
 export interface MenuContextType {
   menuItems: MenuItem[]
   setMenuItems: React.Dispatch<React.SetStateAction<MenuItem[]>>
+  addMenuItem: (item: MenuItem) => Promise<void>
 }

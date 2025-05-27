@@ -6,11 +6,12 @@ export type CartItem = {
 
 export type Order = {
   items: CartItem[]
-  timestamp: number
+  created_at: string
   status: string
 }
 
 export interface CartContextType {
   cart: CartItem[]
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
+  placeOrder: () => Promise<void>
 }

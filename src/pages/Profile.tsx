@@ -16,14 +16,31 @@ import { useHistory } from "react-router-dom"
 import "./Menu.css"
 import { Order } from "../types/cart"
 import { supabase } from "../supabaseClient"
+import { useEffect } from "react"
 
 type Props = {}
 
 const Profile: React.FC<Props> = () => {
   const [present] = useIonToast()
   const history = useHistory()
-  const { user } = useUserContext()
-  const { orders } = user
+  const { user, orders, setOrders } = useUserContext()
+
+  useEffect(() => {
+    if (user) {
+      const fetchOrders = async () => {
+        const { data, error } = await supabase
+          .from("orders")
+          .select("*")
+          .eq("user_id", user.id)
+        if (error) {
+          console.error("Error fetching orders:", error)
+        } else {
+          setOrders(data || [])
+        }
+      }
+      fetchOrders()
+    }
+  }, [user])
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
@@ -55,7 +72,7 @@ const Profile: React.FC<Props> = () => {
             <IonList>
               {orders.map((order: Order) => (
                 <IonItem>
-                  <p>{order.timestamp}</p>
+                  <p>{order.created_at}</p>
                 </IonItem>
               ))}
             </IonList>

@@ -14,26 +14,22 @@ import "./Menu.css"
 
 import { useCartContext } from "../hooks/useCartContext"
 import { useUserContext } from "../hooks/useUserContext"
-import { User } from "../types/user"
 
 type Props = {}
 
 const Cart: React.FC<Props> = () => {
-  const { cart, setCart } = useCartContext()
+  const { cart, placeOrder } = useCartContext()
   const { setUser } = useUserContext()
 
   const history = useHistory()
 
-  const placeOrder = () => {
-    setUser((prev: User) => ({
-      ...prev,
-      orders: [
-        ...prev.orders,
-        { items: cart, timestamp: Date.now(), status: "pending" },
-      ],
-    }))
-    setCart([])
-    history.push("/profile")
+  const checkout = async() => {
+    try {
+      await placeOrder()
+      history.push("/profile")
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -56,7 +52,7 @@ const Cart: React.FC<Props> = () => {
             </IonItem>
           </IonList>
         ))}
-        <IonButton size='small' onClick={() => placeOrder()}>
+        <IonButton size='small' onClick={() => checkout()}>
           Checkout
         </IonButton>
       </IonContent>

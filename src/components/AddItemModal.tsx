@@ -18,7 +18,7 @@ import { addCircleOutline } from "ionicons/icons"
 import { useMenuContext } from "../hooks/useMenuContext"
 
 function AddItemModal({ item }) {
-  const { setMenuItems } = useMenuContext()
+  const { addMenuItem } = useMenuContext()
   const [newItem, setNewItem] = useState<MenuItem>({
     name: "",
     description: "",
@@ -41,7 +41,7 @@ function AddItemModal({ item }) {
   }
 
   function saveItem() {
-    setMenuItems((prev) => [...prev, newItem])
+    addMenuItem(newItem)
     modal.current?.dismiss()
   }
 
