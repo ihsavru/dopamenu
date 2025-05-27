@@ -25,9 +25,13 @@ export function LoginPage() {
     await showLoading()
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({ email })
+      const { data, error } = await supabase.auth.signInWithOtp({ email })
 
       if (error) {
+        await showToast({
+          message: error.message,
+          duration: 3000,
+        })
         throw error
       }
 

@@ -8,17 +8,33 @@ import {
   IonItem,
   IonButton,
   IonText,
+  useIonToast,
 } from "@ionic/react"
 import { useUserContext } from "../hooks/useUserContext"
 
+import { useHistory } from "react-router-dom"
 import "./Menu.css"
 import { Order } from "../types/cart"
+import { supabase } from "../supabaseClient"
 
 type Props = {}
 
 const Profile: React.FC<Props> = () => {
+  const [present] = useIonToast()
+  const history = useHistory()
   const { user } = useUserContext()
   const { orders } = user
+
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      present({ message: error.message, color: "danger", duration: 3000 })
+    } else {
+      present({ message: "Signed out successfully", duration: 2000 })
+      history.push("/")
+    }
+  }
 
   return (
     <IonPage>
@@ -45,6 +61,7 @@ const Profile: React.FC<Props> = () => {
             </IonList>
           </div>
         </IonHeader>
+        <IonButton onClick={signOut}>Sign Out</IonButton>
       </IonContent>
     </IonPage>
   )

@@ -17,41 +17,25 @@ import Menu from "./pages/Menu"
 import Cart from "./pages/Cart"
 import { LoginPage } from "./pages/Login"
 import { AccountPage } from "./pages/Account"
+import Profile from "./pages/Profile"
 import { MenuContextProvider } from "./context/MenuContext"
+import { CartContextProvider } from "./context/CartContext"
+import { UserContextProvider } from "./context/UserContext"
 import { supabase } from "./supabaseClient"
+import { PrivateRoute } from "./components/PrivateRoute"
 
-/* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css"
-
-/* Basic CSS for apps built with Ionic */
 import "@ionic/react/css/normalize.css"
 import "@ionic/react/css/structure.css"
 import "@ionic/react/css/typography.css"
-
-/* Optional CSS utils that can be commented out */
 import "@ionic/react/css/padding.css"
 import "@ionic/react/css/float-elements.css"
 import "@ionic/react/css/text-alignment.css"
 import "@ionic/react/css/text-transformation.css"
 import "@ionic/react/css/flex-utils.css"
 import "@ionic/react/css/display.css"
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
 import "@ionic/react/css/palettes/dark.system.css"
-
-/* Theme variables */
 import "./theme/variables.css"
-import { CartContextProvider } from "./context/CartContext"
-import Profile from "./pages/Profile"
-import { UserContextProvider } from "./context/UserContext"
 
 setupIonicReact()
 
@@ -62,15 +46,34 @@ const App: React.FC = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
     })
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-    return () => subscription.unsubscribe()
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setSession(session)
+      }
+    )
+
+    return () => {
+      listener.subscription?.unsubscribe()
+    }
   }, [])
 
-  console.log(session)
+  const tabs = (
+    <IonTabBar slot='bottom'>
+      <IonTabButton tab='home' href='/home'>
+        <IonIcon aria-hidden='true' icon={homeOutline} />
+        <IonLabel>Home</IonLabel>
+      </IonTabButton>
+      <IonTabButton tab='menu' href='/menu'>
+        <IonIcon aria-hidden='true' icon={listOutline} />
+        <IonLabel>Menu</IonLabel>
+      </IonTabButton>
+      <IonTabButton tab='profile' href='/profile'>
+        <IonIcon aria-hidden='true' icon={personCircleOutline} />
+        <IonLabel>You</IonLabel>
+      </IonTabButton>
+    </IonTabBar>
+  )
 
   return (
     <UserContextProvider>
@@ -83,40 +86,42 @@ const App: React.FC = () => {
                   <Route
                     exact
                     path='/'
-                    render={() => {
-                      return session ? <Redirect to='/home' /> : <LoginPage />
-                    }}
+                    render={() =>
+                      session ? <Redirect to='/home' /> : <LoginPage />
+                    }
                   />
-                  <Route exact path='/account'>
-                    <AccountPage />
-                  </Route>
-                  <Route exact path='/home'>
-                    <Home />
-                  </Route>
-                  <Route exact path='/menu'>
-                    <Menu />
-                  </Route>
-                  <Route exact path='/cart'>
-                    <Cart />
-                  </Route>
-                  <Route exact path='/profile'>
-                    <Profile />
-                  </Route>
+                  <PrivateRoute
+                    exact
+                    path='/account'
+                    component={AccountPage}
+                    session={session}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/home'
+                    component={Home}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/menu'
+                    component={Menu}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/cart'
+                    component={Cart}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/profile'
+                    component={Profile}
+                  />
                 </IonRouterOutlet>
-                <IonTabBar slot='bottom'>
-                  <IonTabButton tab='home' href='/home'>
-                    <IonIcon aria-hidden='true' icon={homeOutline} />
-                    <IonLabel>Home</IonLabel>
-                  </IonTabButton>
-                  <IonTabButton tab='menu' href='/menu'>
-                    <IonIcon aria-hidden='true' icon={listOutline} />
-                    <IonLabel>Menu</IonLabel>
-                  </IonTabButton>
-                  <IonTabButton tab='profile' href='/profile'>
-                    <IonIcon aria-hidden='true' icon={personCircleOutline} />
-                    <IonLabel>You</IonLabel>
-                  </IonTabButton>
-                </IonTabBar>
+                {session && tabs}
               </IonTabs>
             </IonReactRouter>
           </IonApp>
