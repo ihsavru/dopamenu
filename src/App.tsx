@@ -1,4 +1,5 @@
 import { Redirect, Route } from "react-router-dom"
+import { useEffect, useState } from "react"
 import {
   IonApp,
   IonIcon,
@@ -14,7 +15,10 @@ import { homeOutline, listOutline, personCircleOutline } from "ionicons/icons"
 import Home from "./pages/Home"
 import Menu from "./pages/Menu"
 import Cart from "./pages/Cart"
+import { LoginPage } from "./pages/Login"
+import { AccountPage } from "./pages/Account"
 import { MenuContextProvider } from "./context/MenuContext"
+import { supabase } from "./supabaseClient"
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css"
@@ -52,6 +56,22 @@ import { UserContextProvider } from "./context/UserContext"
 setupIonicReact()
 
 const App: React.FC = () => {
+  const [session, setSession] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  console.log(session)
+
   return (
     <UserContextProvider>
       <MenuContextProvider>
@@ -60,6 +80,16 @@ const App: React.FC = () => {
             <IonReactRouter>
               <IonTabs>
                 <IonRouterOutlet>
+                  <Route
+                    exact
+                    path='/'
+                    render={() => {
+                      return session ? <Redirect to='/home' /> : <LoginPage />
+                    }}
+                  />
+                  <Route exact path='/account'>
+                    <AccountPage />
+                  </Route>
                   <Route exact path='/home'>
                     <Home />
                   </Route>
@@ -71,9 +101,6 @@ const App: React.FC = () => {
                   </Route>
                   <Route exact path='/profile'>
                     <Profile />
-                  </Route>
-                  <Route exact path='/'>
-                    <Redirect to='/home' />
                   </Route>
                 </IonRouterOutlet>
                 <IonTabBar slot='bottom'>
