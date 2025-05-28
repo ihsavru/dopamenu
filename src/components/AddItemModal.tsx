@@ -11,6 +11,7 @@ import {
   IonInput,
   IonItem,
   IonList,
+  useIonToast,
   useIonActionSheet,
 } from "@ionic/react"
 import { MenuItem } from "../types/menu"
@@ -27,10 +28,18 @@ function AddItemModal({ item }) {
     type: item.type,
   })
 
+  const [presentToast] = useIonToast()
+
   const { mutate: addMenuItem } = useMutation({
     mutationFn: createMenuItem,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["menu-items"] })
+      setNewItem({
+        name: "",
+        description: "",
+        type: item.type,
+      })
+      modal.current?.dismiss()
     },
   })
 
@@ -50,13 +59,14 @@ function AddItemModal({ item }) {
   }
 
   function saveItem() {
+    if (!newItem.name) {
+      presentToast({
+        message: "Please enter a name",
+        duration: 2000,
+      })
+      return
+    }
     addMenuItem(newItem)
-    setNewItem({
-      name: "",
-      description: "",
-      type: item.type,
-    })
-    modal.current?.dismiss()
   }
 
   return (
