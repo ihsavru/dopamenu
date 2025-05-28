@@ -40,3 +40,13 @@ export const createOrder = async ({
 
   return order
 }
+
+export const markOrderCompleted = async (orderId: number) => {
+  const { data, error } = await supabase
+    .from("orders")
+    .update({ status: "completed" })
+    .eq("id", orderId)
+
+  if (error) throw new Error(error.message)
+  return data
+}

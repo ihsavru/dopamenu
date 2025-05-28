@@ -20,8 +20,9 @@ import "./Menu.css"
 import { Order } from "../types/cart"
 import { supabase } from "../supabaseClient"
 import { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { fetchOrders } from "../api/orders"
+import { useQuery, useMutation } from "@tanstack/react-query"
+import { fetchOrders, markOrderCompleted } from "../api/orders"
+import { queryClient } from "../api/client"
 
 type Props = {}
 
@@ -34,6 +35,13 @@ const Profile: React.FC<Props> = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["orders", user?.id],
     queryFn: () => fetchOrders(user?.id),
+  })
+
+  const { mutate: completeOrder, isPending: isCompleting } = useMutation({
+    mutationFn: (orderId: number) => markOrderCompleted(orderId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] })
+    },
   })
 
   if (error) {
@@ -59,6 +67,11 @@ const Profile: React.FC<Props> = () => {
     }
   }
 
+  const badgeColors = {
+    pending: "warning",
+    completed: "success",
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -82,13 +95,27 @@ const Profile: React.FC<Props> = () => {
           <IonList>
             {orders.map((order: Order) => (
               <IonItem>
-                <IonBadge slot='end'>{order.status}</IonBadge>
-                <IonLabel>{order.created_at}</IonLabel>
+                <IonBadge color={badgeColors[order.status]} slot='end'>{order.status}</IonBadge>
+                <IonLabel>
+                  {order.created_at}{" "}
+                  {order.status === "pending" && (
+                    <IonButton
+                      onClick={() => completeOrder(order.id)}
+                      size='small'
+                      disabled={isCompleting}
+                      color='light'
+                    >
+                      Mark as completed
+                    </IonButton>
+                  )}
+                </IonLabel>
               </IonItem>
             ))}
           </IonList>
 
-          <IonButton onClick={signOut}>Sign Out</IonButton>
+          <IonButton size='small' onClick={signOut}>
+            Sign Out
+          </IonButton>
         </div>
       </IonContent>
     </IonPage>
