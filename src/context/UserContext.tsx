@@ -3,17 +3,14 @@ import { UserContextType, User } from "../types/user"
 import { supabase } from "../supabaseClient"
 
 export const UserContext = createContext<UserContextType>({
-  user: [],
-  orders:[],
-  setOrders: () => {},
+  user: null,
   setUser: () => {},
 })
 
 export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User>({ })
-  const [orders, setOrders] = useState<User[]>([])
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,7 +34,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [])
 
   return (
-    <UserContext.Provider value={{ user, setUser, orders, setOrders }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   )

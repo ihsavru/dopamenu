@@ -9,6 +9,9 @@ import {
   IonButton,
   IonText,
   useIonToast,
+  IonProgressBar,
+  IonBadge,
+  IonLabel,
 } from "@ionic/react"
 import { useUserContext } from "../hooks/useUserContext"
 
@@ -16,31 +19,34 @@ import { useHistory } from "react-router-dom"
 import "./Menu.css"
 import { Order } from "../types/cart"
 import { supabase } from "../supabaseClient"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { fetchOrders } from "../api/orders"
 
 type Props = {}
 
 const Profile: React.FC<Props> = () => {
+  const [orders, setOrders] = useState<Order[]>([])
   const [present] = useIonToast()
   const history = useHistory()
-  const { user, orders, setOrders } = useUserContext()
+  const { user } = useUserContext()
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["orders", user?.id],
+    queryFn: () => fetchOrders(user?.id),
+  })
+
+  if (error) {
+    present({
+      message: error.message,
+      duration: 5000,
+      position: "bottom",
+    })
+  }
 
   useEffect(() => {
-    if (user) {
-      const fetchOrders = async () => {
-        const { data, error } = await supabase
-          .from("orders")
-          .select("*")
-          .eq("user_id", user.id)
-        if (error) {
-          console.error("Error fetching orders:", error)
-        } else {
-          setOrders(data || [])
-        }
-      }
-      fetchOrders()
-    }
-  }, [user])
+    setOrders(data || [])
+  }, [data])
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
@@ -64,21 +70,26 @@ const Profile: React.FC<Props> = () => {
         <IonHeader collapse='condense'>
           <IonToolbar>
             <IonTitle size='large'>Profile</IonTitle>
+            {isLoading && (
+              <IonProgressBar type='indeterminate'></IonProgressBar>
+            )}
           </IonToolbar>
-          <div className='ion-padding'>
-            <IonText>
-              <h4>Order History</h4>
-            </IonText>
-            <IonList>
-              {orders.map((order: Order) => (
-                <IonItem>
-                  <p>{order.created_at}</p>
-                </IonItem>
-              ))}
-            </IonList>
-          </div>
         </IonHeader>
-        <IonButton onClick={signOut}>Sign Out</IonButton>
+        <div className='ion-padding'>
+          <IonText>
+            <h4>Order History</h4>
+          </IonText>
+          <IonList>
+            {orders.map((order: Order) => (
+              <IonItem>
+                <IonBadge slot='end'>{order.status}</IonBadge>
+                <IonLabel>{order.created_at}</IonLabel>
+              </IonItem>
+            ))}
+          </IonList>
+
+          <IonButton onClick={signOut}>Sign Out</IonButton>
+        </div>
       </IonContent>
     </IonPage>
   )

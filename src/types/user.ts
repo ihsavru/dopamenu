@@ -1,10 +1,11 @@
 import { Order } from "./cart"
 
 export type User = {
-  orders: Order[]
+  email: string
+  id: string
 }
 
 export interface UserContextType {
-  user: User
-  setCart: React.Dispatch<React.SetStateAction<User>>
+  user: User | null
+  setUser: React.Dispatch<React.SetStateAction<User | null>>
 }

@@ -13,5 +13,4 @@ export type Order = {
 export interface CartContextType {
   cart: CartItem[]
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>
-  placeOrder: () => Promise<void>
 }

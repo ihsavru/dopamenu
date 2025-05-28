@@ -1,4 +1,5 @@
 import { supabase } from "../supabaseClient"
+import { MenuItem } from "../types/menu"
 
 export const fetchMenuItems = async (): Promise<MenuItem[]> => {
   const { data, error } = await supabase.from("menu_items").select("*")

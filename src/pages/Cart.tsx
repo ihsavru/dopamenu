@@ -7,6 +7,7 @@ import {
   IonList,
   IonItem,
   IonButton,
+  useIonToast,
 } from "@ionic/react"
 import { useHistory } from "react-router-dom"
 
@@ -14,19 +15,48 @@ import "./Menu.css"
 
 import { useCartContext } from "../hooks/useCartContext"
 import { useUserContext } from "../hooks/useUserContext"
+import { createOrder } from "../api/orders"
+import { useMutation } from "@tanstack/react-query"
+import { queryClient } from "../api/client"
 
 type Props = {}
 
 const Cart: React.FC<Props> = () => {
-  const { cart, placeOrder } = useCartContext()
-  const { setUser } = useUserContext()
+  const { cart, setCart } = useCartContext()
+  const { user } = useUserContext()
+  const [present] = useIonToast()
+
+  const {
+    mutate: placeOrder,
+    isPending,
+    error,
+  } = useMutation({
+    mutationFn: createOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] })
+      setCart([])
+      present({
+        message: "Order placed successfully!",
+        duration: 5000,
+        position: "bottom",
+      })
+      history.push("/profile")
+    },
+  })
+
+  if (error) {
+    present({
+      message: error.message,
+      duration: 5000,
+      position: "bottom",
+    })
+  }
 
   const history = useHistory()
 
-  const checkout = async() => {
+  const checkout = async () => {
     try {
-      await placeOrder()
-      history.push("/profile")
+      await placeOrder({ items: cart, userId: user?.id })
     } catch (error) {
       console.error(error)
     }
@@ -52,7 +82,7 @@ const Cart: React.FC<Props> = () => {
             </IonItem>
           </IonList>
         ))}
-        <IonButton size='small' onClick={() => checkout()}>
+        <IonButton disabled={isPending} size='small' onClick={() => checkout()}>
           Checkout
         </IonButton>
       </IonContent>
