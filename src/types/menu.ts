@@ -6,7 +6,7 @@ export type MenuItemType =
   | "specials"
 
 export type MenuItem = {
-  id: string
+  id?: string
   name: string
   durationInSeconds?: number
   description?: string

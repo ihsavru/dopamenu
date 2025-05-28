@@ -1,5 +1,8 @@
 import { Redirect, Route } from "react-router-dom"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
+import { QueryClientProvider } from "@tanstack/react-query"
+import { queryClient } from "./api/client"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import {
   IonApp,
   IonIcon,
@@ -18,7 +21,6 @@ import Cart from "./pages/Cart"
 import { LoginPage } from "./pages/Login"
 import { AccountPage } from "./pages/Account"
 import Profile from "./pages/Profile"
-import { MenuContextProvider } from "./context/MenuContext"
 import { CartContextProvider } from "./context/CartContext"
 import { UserContextProvider } from "./context/UserContext"
 import { supabase } from "./supabaseClient"
@@ -39,7 +41,22 @@ import "./theme/variables.css"
 
 setupIonicReact()
 
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import("@tanstack/react-query-devtools/build/modern/production.js").then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    })
+  )
+)
+
 const App: React.FC = () => {
+  const [showDevtools, setShowDevtools] = React.useState(false)
+
+  React.useEffect(() => {
+    // @ts-expect-error
+    window.toggleDevtools = () => setShowDevtools((old) => !old)
+  }, [])
+
   const [session, setSession] = useState(null)
 
   useEffect(() => {
@@ -76,58 +93,64 @@ const App: React.FC = () => {
   )
 
   return (
-    <UserContextProvider>
-      <MenuContextProvider>
-        <CartContextProvider>
-          <IonApp>
-            <IonReactRouter>
-              <IonTabs>
-                <IonRouterOutlet>
-                  <Route
-                    exact
-                    path='/'
-                    render={() =>
-                      session ? <Redirect to='/home' /> : <LoginPage />
-                    }
-                  />
-                  <PrivateRoute
-                    exact
-                    path='/account'
-                    component={AccountPage}
-                    session={session}
-                  />
-                  <PrivateRoute
-                    session={session}
-                    exact
-                    path='/home'
-                    component={Home}
-                  />
-                  <PrivateRoute
-                    session={session}
-                    exact
-                    path='/menu'
-                    component={Menu}
-                  />
-                  <PrivateRoute
-                    session={session}
-                    exact
-                    path='/cart'
-                    component={Cart}
-                  />
-                  <PrivateRoute
-                    session={session}
-                    exact
-                    path='/profile'
-                    component={Profile}
-                  />
-                </IonRouterOutlet>
-                {session && tabs}
-              </IonTabs>
-            </IonReactRouter>
-          </IonApp>
-        </CartContextProvider>
-      </MenuContextProvider>
-    </UserContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <UserContextProvider>
+          <CartContextProvider>
+            <IonApp>
+              <IonReactRouter>
+                <IonTabs>
+                  <IonRouterOutlet>
+                    <Route
+                      exact
+                      path='/'
+                      render={() =>
+                        session ? <Redirect to='/home' /> : <LoginPage />
+                      }
+                    />
+                    <PrivateRoute
+                      exact
+                      path='/account'
+                      component={AccountPage}
+                      session={session}
+                    />
+                    <PrivateRoute
+                      session={session}
+                      exact
+                      path='/home'
+                      component={Home}
+                    />
+                    <PrivateRoute
+                      session={session}
+                      exact
+                      path='/menu'
+                      component={Menu}
+                    />
+                    <PrivateRoute
+                      session={session}
+                      exact
+                      path='/cart'
+                      component={Cart}
+                    />
+                    <PrivateRoute
+                      session={session}
+                      exact
+                      path='/profile'
+                      component={Profile}
+                    />
+                  </IonRouterOutlet>
+                  {session && tabs}
+                </IonTabs>
+              </IonReactRouter>
+            </IonApp>
+          </CartContextProvider>
+      </UserContextProvider>
+      <ReactQueryDevtools initialIsOpen />
+      {showDevtools && (
+        <React.Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </React.Suspense>
+      )}
+    </QueryClientProvider>
   )
 }
 

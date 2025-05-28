@@ -8,24 +8,49 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
+  useIonToast,
   IonCardTitle,
+  IonProgressBar,
+  IonList,
+  IonItem,
 } from "@ionic/react"
+import { useEffect, useState } from "react"
 import {
   MENU_ITEM_TYPES,
   DisplayMenuItem,
   MenuItemTypeKey,
 } from "../utils/constants/menu"
-
+import { fetchMenuItems } from "../api/menuItems"
+import { useQuery } from "@tanstack/react-query"
 import "./Menu.css"
+import { MenuItem } from "../types/menu"
+import { useUserContext } from "../hooks/useUserContext"
 
 import AddItemModal from "../components/AddItemModal"
-import { useMenuContext } from "../hooks/useMenuContext"
 
-type Props = {
-}
+type Props = {}
 
 const Menu: React.FC<Props> = () => {
-  const { menuItems } = useMenuContext()
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+  const { user } = useUserContext()
+  const [present] = useIonToast()
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["menu-items", user.id],
+    queryFn: fetchMenuItems,
+  })
+
+  useEffect(() => {
+    setMenuItems(data || [])
+  }, [data])
+
+  if (error) {
+    present({
+      message: error.message,
+      duration: 5000,
+      position: "bottom",
+    })
+  }
 
   const displayItems = Object.keys(MENU_ITEM_TYPES).map((key) => {
     const displayItem = MENU_ITEM_TYPES[
@@ -50,6 +75,9 @@ const Menu: React.FC<Props> = () => {
         <IonHeader collapse='condense'>
           <IonToolbar>
             <IonTitle size='large'>Your Dopamine Menu</IonTitle>
+            {isLoading && (
+              <IonProgressBar type='indeterminate'></IonProgressBar>
+            )}
           </IonToolbar>
         </IonHeader>
         {displayItems.map((item) => (
@@ -61,7 +89,13 @@ const Menu: React.FC<Props> = () => {
 
             <IonCardContent>
               <p>{item.description}</p>
-              <div>{item.items.map((item) => item.name)}</div>
+              <IonList lines="inset">
+                {item.items.map((item) => (
+                  <IonItem>
+                    <p>{item.name}</p>
+                  </IonItem>
+                ))}
+              </IonList>
 
               <AddItemModal item={item} />
             </IonCardContent>

@@ -15,14 +15,23 @@ import {
 } from "@ionic/react"
 import { MenuItem } from "../types/menu"
 import { addCircleOutline } from "ionicons/icons"
-import { useMenuContext } from "../hooks/useMenuContext"
+import { createMenuItem } from "../api/menuItems"
+import { useMutation } from "@tanstack/react-query"
+import { useUserContext } from "../hooks/useUserContext"
+import { queryClient } from "../api/client"
 
 function AddItemModal({ item }) {
-  const { addMenuItem } = useMenuContext()
   const [newItem, setNewItem] = useState<MenuItem>({
     name: "",
     description: "",
     type: item.type,
+  })
+
+  const { mutate: addMenuItem } = useMutation({
+    mutationFn: createMenuItem,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["menu-items"] })
+    },
   })
 
   const modal = useRef<HTMLIonModalElement>(null)
@@ -42,32 +51,12 @@ function AddItemModal({ item }) {
 
   function saveItem() {
     addMenuItem(newItem)
-    modal.current?.dismiss()
-  }
-
-  function canDismiss() {
-    return new Promise<boolean>((resolve, reject) => {
-      present({
-        header: "Are you sure?",
-        buttons: [
-          {
-            text: "Yes",
-            role: "confirm",
-          },
-          {
-            text: "No",
-            role: "cancel",
-          },
-        ],
-        onWillDismiss: (event) => {
-          if (event.detail.role === "confirm") {
-            resolve(true)
-          } else {
-            reject()
-          }
-        },
-      })
+    setNewItem({
+      name: "",
+      description: "",
+      type: item.type,
     })
+    modal.current?.dismiss()
   }
 
   return (
@@ -79,7 +68,6 @@ function AddItemModal({ item }) {
       <IonModal
         ref={modal}
         trigger={`${item.type}-modal`}
-        canDismiss={canDismiss}
         presentingElement={presentingElement!}
       >
         <IonHeader>
@@ -98,7 +86,9 @@ function AddItemModal({ item }) {
                 labelPlacement='stacked'
                 placeholder='Walk'
                 value={newItem.name}
-                onIonChange={(e) => setNewItem({ ...newItem, name: e.detail.value! })}
+                onIonChange={(e) =>
+                  setNewItem({ ...newItem, name: e.detail.value! })
+                }
               ></IonInput>
             </IonItem>
 
@@ -108,7 +98,9 @@ function AddItemModal({ item }) {
                 labelPlacement='stacked'
                 placeholder='A walk in the park or around the block'
                 value={newItem.description}
-                onIonChange={(e) => setNewItem({ ...newItem, description: e.detail.value! })}
+                onIonChange={(e) =>
+                  setNewItem({ ...newItem, description: e.detail.value! })
+                }
               ></IonInput>
             </IonItem>
           </IonList>
