@@ -112,7 +112,7 @@ export function AccountPage() {
               type='text'
               name='username'
               value={profile.username}
-              onIonChange={(e) =>
+              onIonInput={(e) =>
                 setProfile({ ...profile, username: e.detail.value ?? "" })
               }
             ></IonInput>
@@ -124,7 +124,7 @@ export function AccountPage() {
               type='url'
               name='website'
               value={profile.website}
-              onIonChange={(e) =>
+              onIonInput={(e) =>
                 setProfile({ ...profile, website: e.detail.value ?? "" })
               }
             ></IonInput>

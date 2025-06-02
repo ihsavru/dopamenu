@@ -47,7 +47,7 @@ const VerifyOtp: React.FC = () => {
           placeholder='6-digit code'
           type='number'
           value={otp}
-          onIonChange={(e) => setOtp(e.detail.value!)}
+          onIonInput={(e) => setOtp(e.detail.value!)}
         />
         <IonButton expand='full' onClick={verifyOtp}>
           Verify

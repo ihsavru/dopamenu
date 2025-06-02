@@ -5,7 +5,6 @@ import {
   IonHeader,
   IonInput,
   IonItem,
-  IonLabel,
   IonList,
   IonPage,
   IonTitle,
@@ -68,11 +67,13 @@ export function LoginPage() {
         <IonList inset={true}>
           <form onSubmit={handleLogin}>
             <IonItem>
-              <IonLabel position='stacked'>Email</IonLabel>
               <IonInput
+                fill='solid'
+                label='Email'
+                labelPlacement='stacked'
                 value={email}
                 name='email'
-                onIonChange={(e) => setEmail(e.detail.value ?? "")}
+                onIonInput={(e) => setEmail(e.detail.value ?? "")}
                 type='email'
               ></IonInput>
             </IonItem>

@@ -96,7 +96,7 @@ function AddItemModal({ item }) {
                 labelPlacement='stacked'
                 placeholder='Walk'
                 value={newItem.name}
-                onIonChange={(e) =>
+                onIonInput={(e) =>
                   setNewItem({ ...newItem, name: e.detail.value! })
                 }
               ></IonInput>
@@ -108,7 +108,7 @@ function AddItemModal({ item }) {
                 labelPlacement='stacked'
                 placeholder='A walk in the park or around the block'
                 value={newItem.description}
-                onIonChange={(e) =>
+                onIonInput={(e) =>
                   setNewItem({ ...newItem, description: e.detail.value! })
                 }
               ></IonInput>
