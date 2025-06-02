@@ -30,3 +30,11 @@ yarn-error.log*
 
 # Optional eslint cache
 .eslintcache
+
+# Native iOS
+ios/Pods/
+ios/build/
+ios/DerivedData/
+ios/App.xcworkspace/xcuserdata/
+ios/App.xcodeproj/xcuserdata/
+*.xcuserstate

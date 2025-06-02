@@ -9,7 +9,7 @@ import {
   IonButton,
   useIonToast,
 } from "@ionic/react"
-import { useHistory } from "react-router-dom"
+import { useIonRouter } from "@ionic/react"
 
 import "./Menu.css"
 
@@ -40,7 +40,7 @@ const Cart: React.FC<Props> = () => {
         duration: 5000,
         position: "bottom",
       })
-      history.push("/profile")
+      router.push("/profile")
     },
   })
 
@@ -52,7 +52,7 @@ const Cart: React.FC<Props> = () => {
     })
   }
 
-  const history = useHistory()
+  const router = useIonRouter()
 
   const checkout = async () => {
     try {

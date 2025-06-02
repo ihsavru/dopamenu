@@ -14,13 +14,14 @@ import {
   IonList,
   IonBadge,
   IonProgressBar,
-  useIonToast
+  useIonToast,
 } from "@ionic/react"
 import { Link } from "react-router-dom"
 import "./Home.css"
 import { MenuItem } from "../types/menu"
 import { useCartContext } from "../hooks/useCartContext"
-import { useHistory } from "react-router-dom"
+import { useIonRouter } from "@ionic/react"
+
 import {
   MENU_ITEM_TYPES,
   DisplayMenuItem,
@@ -36,8 +37,7 @@ type Props = {}
 const Home: React.FC<Props> = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const { user } = useUserContext()
-  const [present] = useIonToast();
-
+  const [present] = useIonToast()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["menu-items", user.id],
@@ -50,14 +50,14 @@ const Home: React.FC<Props> = () => {
 
   const { cart, setCart } = useCartContext()
 
-  const history = useHistory()
+  const router = useIonRouter()
 
   const addToCart = (item: MenuItem) => {
     setCart((prev) => [...prev, { menuItem: item }])
   }
 
   const checkout = () => {
-    history.push("/cart")
+    router.push("/cart")
   }
 
   let content = null
@@ -66,8 +66,8 @@ const Home: React.FC<Props> = () => {
     present({
       message: error.message,
       duration: 5000,
-      position: 'bottom',
-    });
+      position: "bottom",
+    })
   }
 
   if (!isLoading && !error && menuItems.length === 0) {

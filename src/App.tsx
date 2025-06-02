@@ -20,6 +20,7 @@ import Menu from "./pages/Menu"
 import Cart from "./pages/Cart"
 import { LoginPage } from "./pages/Login"
 import { AccountPage } from "./pages/Account"
+import VerifyOtp from "./pages/VerifyOtp"
 import Profile from "./pages/Profile"
 import { CartContextProvider } from "./context/CartContext"
 import { UserContextProvider } from "./context/UserContext"
@@ -95,54 +96,55 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <UserContextProvider>
-          <CartContextProvider>
-            <IonApp>
-              <IonReactRouter>
-                <IonTabs>
-                  <IonRouterOutlet>
-                    <Route
-                      exact
-                      path='/'
-                      render={() =>
-                        session ? <Redirect to='/home' /> : <LoginPage />
-                      }
-                    />
-                    <PrivateRoute
-                      exact
-                      path='/account'
-                      component={AccountPage}
-                      session={session}
-                    />
-                    <PrivateRoute
-                      session={session}
-                      exact
-                      path='/home'
-                      component={Home}
-                    />
-                    <PrivateRoute
-                      session={session}
-                      exact
-                      path='/menu'
-                      component={Menu}
-                    />
-                    <PrivateRoute
-                      session={session}
-                      exact
-                      path='/cart'
-                      component={Cart}
-                    />
-                    <PrivateRoute
-                      session={session}
-                      exact
-                      path='/profile'
-                      component={Profile}
-                    />
-                  </IonRouterOutlet>
-                  {session && tabs}
-                </IonTabs>
-              </IonReactRouter>
-            </IonApp>
-          </CartContextProvider>
+        <CartContextProvider>
+          <IonApp>
+            <IonReactRouter>
+              <IonTabs>
+                <IonRouterOutlet>
+                  <Route
+                    exact
+                    path='/'
+                    render={() =>
+                      session ? <Redirect to='/home' /> : <LoginPage />
+                    }
+                  />
+                  <Route exact path='/verify-otp' component={VerifyOtp} />
+                  <PrivateRoute
+                    exact
+                    path='/account'
+                    component={AccountPage}
+                    session={session}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/home'
+                    component={Home}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/menu'
+                    component={Menu}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/cart'
+                    component={Cart}
+                  />
+                  <PrivateRoute
+                    session={session}
+                    exact
+                    path='/profile'
+                    component={Profile}
+                  />
+                </IonRouterOutlet>
+                {session && tabs}
+              </IonTabs>
+            </IonReactRouter>
+          </IonApp>
+        </CartContextProvider>
       </UserContextProvider>
       <ReactQueryDevtools initialIsOpen />
       {showDevtools && (

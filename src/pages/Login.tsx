@@ -14,10 +14,11 @@ import {
   useIonLoading,
 } from "@ionic/react"
 import { supabase } from "../supabaseClient"
+import { useIonRouter } from "@ionic/react"
 
 export function LoginPage() {
   const [email, setEmail] = useState("")
-
+  const router = useIonRouter()
   const [showLoading, hideLoading] = useIonLoading()
   const [showToast] = useIonToast()
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,7 +26,7 @@ export function LoginPage() {
     await showLoading()
 
     try {
-      const { data, error } = await supabase.auth.signInWithOtp({ email })
+      const { error } = await supabase.auth.signInWithOtp({ email })
 
       if (error) {
         await showToast({
@@ -36,9 +37,10 @@ export function LoginPage() {
       }
 
       await showToast({
-        message: "Check your email for the login link!",
+        message: "Check your email for the login code!",
         duration: 3000,
       })
+      router.push(`/verify-otp?email=${email}`)
     } catch (e: any) {
       await showToast({
         message: e.message || "An error occurred",
@@ -61,7 +63,7 @@ export function LoginPage() {
       <IonContent>
         <div className='ion-padding'>
           <h1>Supabase + Ionic React</h1>
-          <p>Sign in via magic link with your email below</p>
+          <p>Sign in via OTP with your email below</p>
         </div>
         <IonList inset={true}>
           <form onSubmit={handleLogin}>
