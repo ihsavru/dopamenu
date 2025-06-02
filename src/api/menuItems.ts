@@ -15,3 +15,12 @@ export const createMenuItem = async (item: MenuItem) => {
   if (error) throw new Error(error.message)
   return data
 }
+
+export const deleteMenuItem = async (id: number) => {
+  const { data, error } = await supabase
+    .from("menu_items")
+    .delete()
+    .eq("id", id)
+  if (error) throw new Error(error.message)
+  return data
+}
