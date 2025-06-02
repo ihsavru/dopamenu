@@ -8,10 +8,12 @@ import {
   IonText,
 } from "@ionic/react"
 import { supabase } from "../supabaseClient"
+import { useUserContext } from "../hooks/useUserContext"
 import { useIonRouter } from "@ionic/react"
 import { useLocation } from "react-router-dom"
 
 const VerifyOtp: React.FC = () => {
+  const { setUser } = useUserContext()
   const location = useLocation<{ email: string }>()
   const params = new URLSearchParams(location.search)
 
@@ -34,6 +36,7 @@ const VerifyOtp: React.FC = () => {
     if (error) {
       setToastMsg(error.message)
     } else if (session) {
+      setUser(session.user)
       router.push("/home")
     }
   }

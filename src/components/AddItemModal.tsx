@@ -12,7 +12,6 @@ import {
   IonItem,
   IonList,
   useIonToast,
-  useIonActionSheet,
 } from "@ionic/react"
 import { MenuItem } from "../types/menu"
 import { addCircleOutline } from "ionicons/icons"
@@ -22,6 +21,7 @@ import { useUserContext } from "../hooks/useUserContext"
 import { queryClient } from "../api/client"
 
 function AddItemModal({ item }) {
+  const { user } = useUserContext()
   const [newItem, setNewItem] = useState<MenuItem>({
     name: "",
     description: "",
@@ -41,6 +41,12 @@ function AddItemModal({ item }) {
       })
       modal.current?.dismiss()
     },
+    onError: (error) => {
+      presentToast({
+        message: error.message,
+        duration: 2000,
+      })
+    },
   })
 
   const modal = useRef<HTMLIonModalElement>(null)
@@ -48,7 +54,6 @@ function AddItemModal({ item }) {
 
   const [presentingElement, setPresentingElement] =
     useState<HTMLElement | null>(null)
-  const [present] = useIonActionSheet()
 
   useEffect(() => {
     setPresentingElement(page.current)
@@ -66,7 +71,7 @@ function AddItemModal({ item }) {
       })
       return
     }
-    addMenuItem(newItem)
+    addMenuItem({ ...newItem, user_id: user?.id })
   }
 
   return (

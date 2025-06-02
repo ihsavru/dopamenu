@@ -9,7 +9,9 @@ export const fetchMenuItems = async (): Promise<MenuItem[]> => {
 }
 
 export const createMenuItem = async (item: MenuItem) => {
-  const { data, error } = await supabase.from("menu_items").insert([item])
+  const { data, error } = await supabase
+    .from("menu_items")
+    .insert([item])
   if (error) throw new Error(error.message)
   return data
 }

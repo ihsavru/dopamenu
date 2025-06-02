@@ -15,7 +15,8 @@ import {
 } from "@ionic/react"
 import { useUserContext } from "../hooks/useUserContext"
 
-import { useHistory } from "react-router-dom"
+import { useIonRouter } from "@ionic/react"
+
 import "./Menu.css"
 import { Order } from "../types/cart"
 import { supabase } from "../supabaseClient"
@@ -29,7 +30,8 @@ type Props = {}
 const Profile: React.FC<Props> = () => {
   const [orders, setOrders] = useState<Order[]>([])
   const [present] = useIonToast()
-  const history = useHistory()
+  const router = useIonRouter()
+
   const { user } = useUserContext()
 
   const { data, isLoading, error } = useQuery({
@@ -63,7 +65,7 @@ const Profile: React.FC<Props> = () => {
       present({ message: error.message, color: "danger", duration: 3000 })
     } else {
       present({ message: "Signed out successfully", duration: 2000 })
-      history.push("/")
+      router.push("/")
     }
   }
 
@@ -95,7 +97,9 @@ const Profile: React.FC<Props> = () => {
           <IonList>
             {orders.map((order: Order) => (
               <IonItem>
-                <IonBadge color={badgeColors[order.status]} slot='end'>{order.status}</IonBadge>
+                <IonBadge color={badgeColors[order.status]} slot='end'>
+                  {order.status}
+                </IonBadge>
                 <IonLabel>
                   {order.created_at}{" "}
                   {order.status === "pending" && (
