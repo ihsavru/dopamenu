@@ -1,0 +1,9 @@
+.login-page__logo {
+  font-size: 96px;
+}
+
+.login-page__input {
+  background-color: var(--ion-color-primary-contrast);
+  border-radius: 999px;
+  color: var(--ion-color-dark)
+}

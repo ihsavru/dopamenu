@@ -2,25 +2,25 @@ import { useState } from "react"
 import {
   IonButton,
   IonContent,
-  IonHeader,
   IonInput,
   IonItem,
   IonList,
   IonPage,
-  IonTitle,
-  IonToolbar,
+  IonText,
   useIonToast,
   useIonLoading,
 } from "@ionic/react"
 import { supabase } from "../supabaseClient"
 import { useIonRouter } from "@ionic/react"
 
+import "./Login.css"
+
 export function LoginPage() {
   const [email, setEmail] = useState("")
   const router = useIonRouter()
   const [showLoading, hideLoading] = useIonLoading()
   const [showToast] = useIonToast()
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     await showLoading()
 
@@ -53,37 +53,38 @@ export function LoginPage() {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent>
-        <div className='ion-padding'>
-          <h1>Supabase + Ionic React</h1>
-          <p>Sign in via OTP with your email below</p>
+      <IonContent
+        color='dark'
+        className='ion-display-flex ion-align-items-center ion-padding'
+      >
+        <IonText color='primary'>
+          <h1 className='login-page__logo ion-text-center'>plateful</h1>
+        </IonText>
+        <IonText color='primary'>
+          <p className='ion-text-center'>
+            A plate full of what makes you feel good
+          </p>
+        </IonText>
+        <IonInput
+          fill='outline'
+          className="login-page__input ion-margin-bottom ion-padding"
+          placeholder="Email"
+          value={email}
+          name='email'
+          onIonInput={(e) => setEmail(e.detail.value ?? "")}
+          type='email'
+        ></IonInput>
+        <div className='ion-text-center'>
+          <IonButton
+            expand='block'
+            shape='round'
+            type='submit'
+            onClick={handleLogin}
+            className="ion-text-uppercase"
+          >
+            Next
+          </IonButton>
         </div>
-        <IonList inset={true}>
-          <form onSubmit={handleLogin}>
-            <IonItem>
-              <IonInput
-                fill='solid'
-                label='Email'
-                labelPlacement='stacked'
-                value={email}
-                name='email'
-                onIonInput={(e) => setEmail(e.detail.value ?? "")}
-                type='email'
-              ></IonInput>
-            </IonItem>
-            <div className='ion-text-center'>
-              <IonButton type='submit' fill='clear'>
-                Login
-              </IonButton>
-            </div>
-          </form>
-        </IonList>
       </IonContent>
     </IonPage>
   )
