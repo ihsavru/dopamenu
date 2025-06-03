@@ -100,30 +100,33 @@ const Home: React.FC<Props> = () => {
       <div className='ion-padding'>
         <h3>Feeling Hungry?</h3>
         <IonList>
-          {displayItems.map((item, index) => (
-            <IonCard key={index}>
-              <IonCardHeader>
-                <IonCardTitle>{item.title}</IonCardTitle>
-                <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
-              </IonCardHeader>
-              <IonCardContent>
-                {item.items.map((menuItem, index) => (
-                  <div>
-                    <h4>{menuItem.name}</h4>
-                    <p>{menuItem.description}</p>
-                    <IonButton
-                      size='small'
-                      id='cart-toast'
-                      color='dark'
-                      onClick={() => addToCart(menuItem)}
-                    >
-                      Add
-                    </IonButton>
-                  </div>
-                ))}
-              </IonCardContent>
-            </IonCard>
-          ))}
+          {displayItems.map((item, index) => {
+            if (item.items.length === 0) return null
+            return (
+              <IonCard key={index}>
+                <IonCardHeader>
+                  <IonCardTitle>{item.title}</IonCardTitle>
+                  <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  {item.items.map((menuItem, index) => (
+                    <div>
+                      <h4>{menuItem.name}</h4>
+                      <p>{menuItem.description}</p>
+                      <IonButton
+                        size='small'
+                        id='cart-toast'
+                        color='dark'
+                        onClick={() => addToCart(menuItem)}
+                      >
+                        Add
+                      </IonButton>
+                    </div>
+                  ))}
+                </IonCardContent>
+              </IonCard>
+            )
+          })}
         </IonList>
       </div>
     )
