@@ -1,2 +1,48 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+:root {
+  --ion-background-color: #D8D2C2;
+  --ion-background-color-rgb: 216, 210, 194;
+  --ion-text-color: #111A13;
+  --ion-text-color-rgb: 17, 26, 19;
+  --ion-color-primary: #889063;
+  --ion-color-primary-rgb: 136, 144, 99;
+  --ion-color-primary-contrast: #F9F7F0;
+  --ion-color-primary-contrast-rgb: 249, 247, 240;
+  --ion-color-primary-shade: #7b8359;
+  --ion-color-primary-tint: #929b6c;
+
+  --ion-color-secondary: #ff9800;
+  --ion-color-secondary-rgb: 255, 152, 0;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #e68900;
+  --ion-color-secondary-tint: #ffaa2c;
+
+  --ion-color-tertiary: #DAA38F;
+  --ion-color-success: #78898F;
+  --ion-color-success-rgb: 120, 137, 143;
+  --ion-color-success-contrast: #f9f7f0;
+  --ion-color-success-contrast-rgb: 249, 247, 240;
+  --ion-color-success-shade: #66757d;
+  --ion-color-success-tint: #81949e;
+  --ion-color-warning: #D8D2C2;
+  --ion-color-danger: #A0381B;
+  --ion-color-dark: #111A13;
+  --ion-color-medium: #354024;
+  --ion-color-light: #889063;
+
+  --ion-tab-bar-background: #354024;
+  --ion-tab-bar-background-focused: var(--ion-background-color);
+  --ion-tab-bar-border-color: var(--ion-color-primary);
+  --ion-tab-bar-color: var(--ion-color-primary);
+  --ion-tab-bar-color-selected: var(--ion-color-primary-contrast);
+
+  --ion-card-background: var(--ion-color-primary-contrast);
+  --ion-item-background: var(--ion-color-primary-contrast);
+  --ion-item-border-color: var(--ion-color-primary);
+  --ion-box-shadow-color: transparent;
+
+  --ion-toolbar-background: var(--ion-color-primary);
+}
