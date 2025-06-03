@@ -220,13 +220,7 @@ const Home: React.FC<Props> = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        {!isLoading && (
-          <IonHeader collapse='condense'>
-            <IonToolbar>
-              <IonTitle size='large'>Home</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-        )}
+        <div className="home__header"></div>
         {content}
       </IonContent>
 

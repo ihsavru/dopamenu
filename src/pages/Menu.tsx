@@ -17,7 +17,11 @@ import {
   IonIcon,
   IonItem,
 } from "@ionic/react"
-import { trashOutline } from "ionicons/icons"
+import {
+  trashOutline,
+  chevronDownOutline,
+  chevronUpOutline,
+} from "ionicons/icons"
 import { useEffect, useState } from "react"
 import {
   MENU_ITEM_TYPES,
@@ -36,7 +40,13 @@ import AddItemModal from "../components/AddItemModal"
 
 type Props = {}
 
-const Item = ({ item, isFetching }: { item: MenuItem, isFetching: boolean }) => {
+const Item = ({
+  item,
+  isFetching,
+}: {
+  item: MenuItem
+  isFetching: boolean
+}) => {
   const [present] = useIonToast()
 
   const { mutate: deleteItem, isPending: isDeleting } = useMutation({
@@ -55,12 +65,59 @@ const Item = ({ item, isFetching }: { item: MenuItem, isFetching: boolean }) => 
   return (
     <IonItem>
       <IonBadge color='light' slot='end' onClick={() => deleteItem(item.id)}>
-        <IonButton fill='clear' size='small' disabled={isDeleting || isFetching}>
+        <IonButton
+          fill='clear'
+          size='small'
+          disabled={isDeleting || isFetching}
+        >
           <IonIcon aria-hidden='true' icon={trashOutline} />
         </IonButton>
       </IonBadge>
       <p>{item.name}</p>
     </IonItem>
+  )
+}
+
+const MenuCard = ({ item, isFetching }) => {
+  const [expanded, setExpanded] = useState(false)
+  return (
+    <IonCard>
+      <IonCardHeader>
+        <IonCardTitle>{item.title}</IonCardTitle>
+        <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
+      </IonCardHeader>
+
+      <IonCardContent>
+        <div className='menu__type-image'></div>
+        <p className='ion-padding-top ion-padding-bottom'>{item.description}</p>
+        {expanded ? (
+          <>
+            <IonList lines='inset'>
+              {item.items.map((item) => (
+                <Item key={item.id} item={item} isFetching={isFetching} />
+              ))}
+            </IonList>
+
+            <AddItemModal item={item} />
+            <IonButton
+              fill='clear'
+              expand='full'
+              onClick={() => setExpanded(false)}
+            >
+              <IonIcon aria-hidden='true' icon={chevronUpOutline} />
+            </IonButton>
+          </>
+        ) : (
+          <IonButton
+            fill='clear'
+            expand='full'
+            onClick={() => setExpanded(true)}
+          >
+            <IonIcon aria-hidden='true' icon={chevronDownOutline} />
+          </IonButton>
+        )}
+      </IonCardContent>
+    </IonCard>
   )
 }
 
@@ -101,37 +158,15 @@ const Menu: React.FC<Props> = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color='success'>
           <IonTitle>Your Dopamine Menu</IonTitle>
+          {isLoading && <IonProgressBar type='indeterminate'></IonProgressBar>}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse='condense'>
-          <IonToolbar>
-            <IonTitle size='large'>Your Dopamine Menu</IonTitle>
-            {isLoading && (
-              <IonProgressBar type='indeterminate'></IonProgressBar>
-            )}
-          </IonToolbar>
-        </IonHeader>
+        <div className='menu__header'></div>
         {displayItems.map((item) => (
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>{item.title}</IonCardTitle>
-              <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
-            </IonCardHeader>
-
-            <IonCardContent>
-              <p>{item.description}</p>
-              <IonList lines='inset'>
-                {item.items.map((item) => (
-                  <Item key={item.id} item={item} isFetching={isFetching} />
-                ))}
-              </IonList>
-
-              <AddItemModal item={item} />
-            </IonCardContent>
-          </IonCard>
+          <MenuCard key={item.type} item={item} isFetching={isFetching} />
         ))}
       </IonContent>
     </IonPage>

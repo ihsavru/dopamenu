@@ -1,0 +1,10 @@
+.menu__header {
+  height: 200px;
+  background-color: var(--ion-color-success);
+}
+
+.menu__type-image {
+  height: 150px;
+  background-color: var(--ion-color-primary);
+  border-radius: 15px;
+}
