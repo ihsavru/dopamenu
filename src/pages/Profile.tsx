@@ -5,19 +5,25 @@ import {
   IonTitle,
   IonToolbar,
   IonList,
+  IonThumbnail,
   IonItem,
+  IonCardHeader,
+  IonCard,
+  IonChip,
   IonButton,
   IonText,
   useIonToast,
   IonProgressBar,
   IonBadge,
   IonLabel,
+  IonCardSubtitle,
+  IonCardTitle,
 } from "@ionic/react"
 import { useUserContext } from "../hooks/useUserContext"
 
 import { useIonRouter } from "@ionic/react"
 
-import "./Menu.css"
+import "./Profile.css"
 import { Order } from "../types/cart"
 import { supabase } from "../supabaseClient"
 import { useEffect, useState } from "react"
@@ -26,6 +32,54 @@ import { fetchOrders, markOrderCompleted } from "../api/orders"
 import { queryClient } from "../api/client"
 
 type Props = {}
+
+const CurrentOrder = ({ order, completeOrder }: { order: Order }) => {
+  return (
+    <IonCard className='ion-padding'>
+      <IonCardHeader>
+        <IonCardSubtitle>
+          <IonChip color='danger'>{order.status}</IonChip>
+        </IonCardSubtitle>
+        <IonCardTitle>{order.id}</IonCardTitle>
+      </IonCardHeader>
+
+      <div className='ion-padding'>
+        <IonList>
+          {order.order_items.map((item) => (
+            <IonItem>
+              <IonThumbnail slot='start'>
+                <img
+                  alt='Silhouette of mountains'
+                  src='https://ionicframework.com/docs/img/demos/thumbnail.svg'
+                />
+              </IonThumbnail>
+              <IonLabel>{item.menu_items?.name}</IonLabel>
+            </IonItem>
+          ))}
+        </IonList>
+      </div>
+      <IonButton
+        onClick={() => completeOrder(order.id)}
+        className='ion-text-uppercase'
+        expand='block'
+        shape='round'
+      >
+        Mark as completed
+      </IonButton>
+    </IonCard>
+  )
+}
+
+const PastOrder = ({ order }: { order: Order }) => {
+  return (
+    <IonItem>
+      <IonLabel>{order.id}</IonLabel>
+      <IonBadge color='success' slot='end'>
+        {order.status}
+      </IonBadge>
+    </IonItem>
+  )
+}
 
 const Profile: React.FC<Props> = () => {
   const [orders, setOrders] = useState<Order[]>([])
@@ -69,57 +123,44 @@ const Profile: React.FC<Props> = () => {
     }
   }
 
-  const badgeColors = {
-    pending: "warning",
-    completed: "success",
-  }
+  const currentOrders = orders.filter(
+    (order: Order) => order.status === "pending"
+  )
+  const pastOrders = orders.filter((order: Order) => order.status !== "pending")
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
+      <IonHeader collapse='condense'>
+        <IonToolbar color='dark'>
           <IonTitle>Profile</IonTitle>
+          {isLoading && <IonProgressBar type='indeterminate'></IonProgressBar>}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <IonHeader collapse='condense'>
-          <IonToolbar>
-            <IonTitle size='large'>Profile</IonTitle>
-            {isLoading && (
-              <IonProgressBar type='indeterminate'></IonProgressBar>
-            )}
-          </IonToolbar>
-        </IonHeader>
+        <div className='profile__header ion-padding'>
+          <IonText color='primary ion-padding'>
+            <h4>{user?.email}</h4>
+            <p>{orders.length} orders placed</p>
+            <IonButton size='small' onClick={signOut}>
+              Sign Out
+            </IonButton>
+          </IonText>
+        </div>
         <div className='ion-padding'>
           <IonText>
-            <h4>Order History</h4>
+            <h3>Current Orders</h3>
           </IonText>
-          <IonList>
-            {orders.map((order: Order) => (
-              <IonItem>
-                <IonBadge color={badgeColors[order.status]} slot='end'>
-                  {order.status}
-                </IonBadge>
-                <IonLabel>
-                  {order.created_at}{" "}
-                  {order.status === "pending" && (
-                    <IonButton
-                      onClick={() => completeOrder(order.id)}
-                      size='small'
-                      disabled={isCompleting}
-                      color='light'
-                    >
-                      Mark as completed
-                    </IonButton>
-                  )}
-                </IonLabel>
-              </IonItem>
+          {currentOrders.map((order: Order) => (
+            <CurrentOrder order={order} completeOrder={completeOrder} />
+          ))}
+          <IonText>
+            <h3>Past Orders</h3>
+          </IonText>
+          <IonList inset>
+            {pastOrders.map((order: Order) => (
+              <PastOrder order={order} />
             ))}
           </IonList>
-
-          <IonButton size='small' onClick={signOut}>
-            Sign Out
-          </IonButton>
         </div>
       </IonContent>
     </IonPage>
