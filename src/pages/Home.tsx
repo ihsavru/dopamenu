@@ -11,11 +11,18 @@ import {
   IonCardContent,
   IonButton,
   IonFooter,
-  IonList,
+  IonCol,
+  IonText,
+  IonGrid,
+  IonRow,
   IonBadge,
   IonProgressBar,
   useIonToast,
+  IonList,
+  IonItem,
+  IonIcon,
 } from "@ionic/react"
+import { addOutline, checkmarkOutline } from "ionicons/icons"
 import { Link } from "react-router-dom"
 import "./Home.css"
 import { MenuItem } from "../types/menu"
@@ -33,6 +40,76 @@ import { useUserContext } from "../hooks/useUserContext"
 import { useEffect, useState } from "react"
 
 type Props = {}
+
+const MenuListItem = ({
+  item,
+  cart,
+  addToCart,
+  removeFromCart,
+}: {
+  item: MenuItem
+}) => {
+  const added = cart.some((cartItem) => cartItem.menuItem.id === item.id)
+
+  const handleAdd = () => {
+    addToCart(item)
+  }
+
+  const handleRemove = () => {
+    removeFromCart(item)
+  }
+
+  return (
+    <IonItem className=''>
+      <IonGrid className='ion-padding-bottom ion-padding-top'>
+        <IonRow>
+          <IonCol size='8'>
+            <IonText color='dark'>
+              <h2>
+                <b>{item.name}</b>
+              </h2>
+            </IonText>
+            <IonText color='medium'>
+              <p>{item.description}</p>
+            </IonText>
+          </IonCol>
+          <IonCol size='4' className='home__menu-item-right'>
+            {item.image ? (
+              <img
+                src={item.image}
+                alt={item.name}
+                className='home__menu-item-image--default'
+              />
+            ) : (
+              <div className='home__menu-item-image--default'></div>
+            )}
+            {added ? (
+              <IonButton
+                size='small'
+                id='cart-toast'
+                color='dark'
+                className='home__menu-item-button'
+                onClick={handleRemove}
+              >
+                <IonIcon aria-hidden='true' icon={checkmarkOutline} />
+              </IonButton>
+            ) : (
+              <IonButton
+                size='small'
+                id='cart-toast'
+                color='light'
+                className='home__menu-item-button'
+                onClick={handleAdd}
+              >
+                <IonIcon aria-hidden='true' icon={addOutline} />
+              </IonButton>
+            )}
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+    </IonItem>
+  )
+}
 
 const Home: React.FC<Props> = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
@@ -54,6 +131,12 @@ const Home: React.FC<Props> = () => {
 
   const addToCart = (item: MenuItem) => {
     setCart((prev) => [...prev, { menuItem: item }])
+  }
+
+  const removeFromCart = (item: MenuItem) => {
+    setCart((prev) =>
+      prev.filter((cartItem) => cartItem.menuItem.id !== item.id)
+    )
   }
 
   const checkout = () => {
@@ -97,37 +180,31 @@ const Home: React.FC<Props> = () => {
 
   if (menuItems.length > 0) {
     content = (
-      <div className='ion-padding'>
-        <h3>Feeling Hungry?</h3>
-        <IonList>
-          {displayItems.map((item, index) => {
-            if (item.items.length === 0) return null
-            return (
-              <IonCard key={index}>
-                <IonCardHeader>
-                  <IonCardTitle>{item.title}</IonCardTitle>
-                  <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent>
+      <div>
+        {displayItems.map((item, index) => {
+          if (item.items.length === 0) return null
+          return (
+            <IonCard key={index}>
+              <IonCardHeader>
+                <IonCardTitle>{item.title}</IonCardTitle>
+                <IonCardSubtitle>{item.subtitle}</IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonList>
                   {item.items.map((menuItem, index) => (
-                    <div>
-                      <h4>{menuItem.name}</h4>
-                      <p>{menuItem.description}</p>
-                      <IonButton
-                        size='small'
-                        id='cart-toast'
-                        color='dark'
-                        onClick={() => addToCart(menuItem)}
-                      >
-                        Add
-                      </IonButton>
-                    </div>
+                    <MenuListItem
+                      key={menuItem.id}
+                      item={menuItem}
+                      cart={cart}
+                      addToCart={addToCart}
+                      removeFromCart={removeFromCart}
+                    />
                   ))}
-                </IonCardContent>
-              </IonCard>
-            )
-          })}
-        </IonList>
+                </IonList>
+              </IonCardContent>
+            </IonCard>
+          )
+        })}
       </div>
     )
   }
@@ -137,7 +214,9 @@ const Home: React.FC<Props> = () => {
       <IonHeader>
         <IonToolbar>
           <IonTitle>Home</IonTitle>
-          {isLoading && <IonProgressBar type='indeterminate'></IonProgressBar>}
+          {isLoading && (
+            <IonProgressBar color='dark' type='indeterminate'></IonProgressBar>
+          )}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -154,7 +233,7 @@ const Home: React.FC<Props> = () => {
       {cart.length > 0 && (
         <IonFooter>
           <IonToolbar>
-            <IonButton expand='block' color='dark' onClick={checkout}>
+            <IonButton expand='block' color='clear' onClick={checkout}>
               View Cart&nbsp;
               <IonBadge slot='end' color={"warning"}>
                 {cart.length}

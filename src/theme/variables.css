@@ -30,8 +30,8 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-warning: #D8D2C2;
   --ion-color-danger: #A0381B;
   --ion-color-dark: #111A13;
-  --ion-color-medium: #354024;
-  --ion-color-light: #889063;
+  --ion-color-medium: #4A4947;
+  --ion-color-light: #F9F7F0;
 
   --ion-tab-bar-background: #354024;
   --ion-tab-bar-background-focused: var(--ion-background-color);

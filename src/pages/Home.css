@@ -1,0 +1,18 @@
+.home__menu-item-right {
+  position: relative;
+}
+
+.home__menu-item-image--default {
+  height: 100px;
+  width: 100%;
+  border-radius: 10px;
+  background-color: var(--ion-color-primary);
+}
+
+.home__menu-item-button {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 25%);
+  border-color: var(--ion-color-primary);
+}
