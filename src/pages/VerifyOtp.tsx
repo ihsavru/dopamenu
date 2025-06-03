@@ -12,6 +12,8 @@ import { useUserContext } from "../hooks/useUserContext"
 import { useIonRouter } from "@ionic/react"
 import { useLocation } from "react-router-dom"
 
+import "./Login.css"
+
 const VerifyOtp: React.FC = () => {
   const { setUser } = useUserContext()
   const location = useLocation<{ email: string }>()
@@ -43,16 +45,32 @@ const VerifyOtp: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className='ion-padding'>
-        <h2>Enter OTP</h2>
-        <IonText color='tertiary'>{email}</IonText>
+      <IonContent
+        color='dark'
+        className='ion-display-flex ion-align-items-center ion-padding'
+      >
+        <IonText color='secondary'>
+          <h1 className='ion-text-center'>you're almost there</h1>
+        </IonText>
+        <IonText color='primary'>
+          <p className='ion-text-center'>
+            Enter the 6 digit code you’ve received in your email
+          </p>
+        </IonText>
         <IonInput
+          className='login-page__input ion-margin-bottom ion-padding'
           placeholder='6-digit code'
           type='number'
           value={otp}
           onIonInput={(e) => setOtp(e.detail.value!)}
         />
-        <IonButton expand='full' onClick={verifyOtp}>
+        <IonButton
+          expand='block'
+          shape='round'
+          type='submit'
+          className='ion-text-uppercase'
+          onClick={verifyOtp}
+        >
           Verify
         </IonButton>
         <IonToast
