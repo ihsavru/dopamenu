@@ -2,6 +2,7 @@ import {
   IonContent,
   IonHeader,
   IonPage,
+  IonImg,
   IonTitle,
   IonToolbar,
   IonCard,
@@ -212,15 +213,21 @@ const Home: React.FC<Props> = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Home</IonTitle>
+        <IonToolbar color="dark">
+          <IonTitle>
+            <IonImg
+              src='/assets/logo-text.png'
+              alt='logo'
+              className='ion-margin ion-padding'
+            ></IonImg>
+          </IonTitle>
           {isLoading && (
             <IonProgressBar color='dark' type='indeterminate'></IonProgressBar>
           )}
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <div className="home__header"></div>
+        <div className='home__header'></div>
         {content}
       </IonContent>
 

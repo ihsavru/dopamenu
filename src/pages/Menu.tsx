@@ -4,6 +4,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  IonImg,
   IonCard,
   IonCardContent,
   IonCardHeader,
@@ -158,8 +159,14 @@ const Menu: React.FC<Props> = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color='success'>
-          <IonTitle>Your Dopamine Menu</IonTitle>
+        <IonToolbar color='dark'>
+          <IonTitle>
+            <IonImg
+              src='/assets/logo-text.png'
+              alt='logo'
+              className='ion-margin ion-padding'
+            ></IonImg>
+          </IonTitle>
           {isLoading && <IonProgressBar type='indeterminate'></IonProgressBar>}
         </IonToolbar>
       </IonHeader>

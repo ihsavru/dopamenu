@@ -110,7 +110,7 @@ const App: React.FC = () => {
                   <Route exact path='/verify-otp' component={VerifyOtp} />
                   <PrivateRoute
                     exact
-                    path='/account'
+                    path='/profile'
                     component={AccountPage}
                     session={session}
                   />

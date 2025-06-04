@@ -9,6 +9,7 @@ import {
   IonText,
   useIonToast,
   useIonLoading,
+  IonImg,
 } from "@ionic/react"
 import { supabase } from "../supabaseClient"
 import { useIonRouter } from "@ionic/react"
@@ -57,18 +58,19 @@ export function LoginPage() {
         color='dark'
         className='ion-display-flex ion-align-items-center ion-padding'
       >
+        <IonImg
+          src='/assets/logo-full.png'
+          alt='logo'
+          className='ion-margin'
+        ></IonImg>
         <IonText color='primary'>
-          <h1 className='login-page__logo ion-text-center'>plateful</h1>
-        </IonText>
-        <IonText color='primary'>
-          <p className='ion-text-center'>
+          <p className='ion-text-center ion-padding'>
             A plate full of what makes you feel good
           </p>
         </IonText>
         <IonInput
-          fill='outline'
-          className="login-page__input ion-margin-bottom ion-padding"
-          placeholder="Email"
+          className='login-page__input ion-margin-bottom ion-padding'
+          placeholder='Email'
           value={email}
           name='email'
           onIonInput={(e) => setEmail(e.detail.value ?? "")}
@@ -76,11 +78,12 @@ export function LoginPage() {
         ></IonInput>
         <div className='ion-text-center'>
           <IonButton
+            size='large'
             expand='block'
             shape='round'
             type='submit'
             onClick={handleLogin}
-            className="ion-text-uppercase"
+            className='ion-text-uppercase'
           >
             Next
           </IonButton>

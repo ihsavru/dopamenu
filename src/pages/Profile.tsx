@@ -3,6 +3,7 @@ import {
   IonHeader,
   IonPage,
   IonTitle,
+  IonImg,
   IonToolbar,
   IonList,
   IonThumbnail,
@@ -45,7 +46,7 @@ const CurrentOrder = ({ order, completeOrder }: { order: Order }) => {
 
       <div className='ion-padding'>
         <IonList>
-          {order.order_items.map((item) => (
+          {order.order_items?.map((item) => (
             <IonItem>
               <IonThumbnail slot='start'>
                 <img
@@ -132,7 +133,13 @@ const Profile: React.FC<Props> = () => {
     <IonPage>
       <IonHeader collapse='condense'>
         <IonToolbar color='dark'>
-          <IonTitle>Profile</IonTitle>
+          <IonTitle>
+            <IonImg
+              src='/assets/logo-text.png'
+              alt='logo'
+              className='ion-margin ion-padding'
+            ></IonImg>
+          </IonTitle>
           {isLoading && <IonProgressBar type='indeterminate'></IonProgressBar>}
         </IonToolbar>
       </IonHeader>

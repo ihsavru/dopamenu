@@ -65,6 +65,7 @@ const VerifyOtp: React.FC = () => {
           onIonInput={(e) => setOtp(e.detail.value!)}
         />
         <IonButton
+          size='large'
           expand='block'
           shape='round'
           type='submit'
