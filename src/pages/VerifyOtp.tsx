@@ -47,39 +47,37 @@ const VerifyOtp: React.FC = () => {
     <IonPage>
       <IonContent
         color='dark'
-        className='ion-display-flex ion-align-items-center ion-padding'
+        className='ion-display-flex ion-align-items-center ion-text-center ion-padding'
       >
-        <IonText color='secondary'>
-          <h1 className='ion-text-center'>you're almost there</h1>
-        </IonText>
-        <IonText color='primary'>
-          <p className='ion-text-center'>
-            Enter the 6 digit code you’ve received in your email
-          </p>
-        </IonText>
-        <IonInput
-          className='login-page__input ion-margin-bottom ion-padding'
-          placeholder='6-digit code'
-          type='number'
-          value={otp}
-          onIonInput={(e) => setOtp(e.detail.value!)}
-        />
-        <IonButton
-          size='large'
-          expand='block'
-          shape='round'
-          type='submit'
-          className='ion-text-uppercase'
-          onClick={verifyOtp}
-        >
-          Verify
-        </IonButton>
-        <IonToast
-          isOpen={!!toastMsg}
-          message={toastMsg}
-          duration={3000}
-          onDidDismiss={() => setToastMsg("")}
-        />
+        <div className='login-page__container'>
+          <IonText color='primary'>
+            <p className='ion-text-center'>
+              Enter the 6 digit code you’ve received in your email
+            </p>
+          </IonText>
+          <IonInput
+            className='login-page__input ion-margin-bottom ion-padding'
+            placeholder='6-digit code'
+            type='number'
+            value={otp}
+            onIonInput={(e) => setOtp(e.detail.value!)}
+          />
+          <IonButton
+            expand='block'
+            shape='round'
+            type='submit'
+            className='ion-text-uppercase login-page__button'
+            onClick={verifyOtp}
+          >
+            Verify
+          </IonButton>
+          <IonToast
+            isOpen={!!toastMsg}
+            message={toastMsg}
+            duration={3000}
+            onDidDismiss={() => setToastMsg("")}
+          />
+        </div>
       </IonContent>
     </IonPage>
   )

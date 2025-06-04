@@ -10,6 +10,7 @@ import {
   useIonToast,
   useIonLoading,
   IonImg,
+  IonRow,
 } from "@ionic/react"
 import { supabase } from "../supabaseClient"
 import { useIonRouter } from "@ionic/react"
@@ -56,30 +57,33 @@ export function LoginPage() {
     <IonPage>
       <IonContent
         color='dark'
-        className='ion-display-flex ion-align-items-center ion-padding'
+        className='ion-padding ion-text-center ion-justify-content-center ion-align-items-center'
+        fullscreen
       >
-        <IonImg src={icon} alt='logo' className='ion-margin'></IonImg>
-        <IonText color='primary'>
-          <p className='ion-text-center ion-padding'>
-            A plate full of what makes you feel good
-          </p>
-        </IonText>
-        <IonInput
-          className='login-page__input ion-margin-bottom ion-padding'
-          placeholder='Email'
-          value={email}
-          name='email'
-          onIonInput={(e) => setEmail(e.detail.value ?? "")}
-          type='email'
-        ></IonInput>
-        <div className='ion-text-center'>
+        <div className='login-page__container'>
+          <IonRow className='ion-justify-content-center'>
+            <IonImg src={icon} alt='logo' className='login-page__logo'></IonImg>
+          </IonRow>
+          <IonText color='primary'>
+            <p className='ion-text-center ion-padding'>
+              A plate full of what makes you feel good
+            </p>
+          </IonText>
+          <IonInput
+            className='login-page__input ion-margin-bottom ion-padding'
+            placeholder='Email'
+            value={email}
+            name='email'
+            onIonInput={(e) => setEmail(e.detail.value ?? "")}
+            type='email'
+          ></IonInput>
           <IonButton
-            size='large'
-            expand='block'
+            size='default'
+            expand='full'
             shape='round'
             type='submit'
             onClick={handleLogin}
-            className='ion-text-uppercase'
+            className='ion-text-uppercase login-page__button'
           >
             Next
           </IonButton>
