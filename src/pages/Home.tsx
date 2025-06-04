@@ -51,6 +51,7 @@ const MenuListItem = ({
 }: {
   item: MenuItem
 }) => {
+  const [expanded, setExpanded] = useState(false)
   const added = cart.some((cartItem) => cartItem.menuItem.id === item.id)
 
   const handleAdd = () => {
@@ -60,6 +61,8 @@ const MenuListItem = ({
   const handleRemove = () => {
     removeFromCart(item)
   }
+
+  const description = item.description?.slice(0, 80)
 
   return (
     <IonItem className=''>
@@ -72,7 +75,12 @@ const MenuListItem = ({
               </h2>
             </IonText>
             <IonText color='medium'>
-              <p>{item.description}</p>
+              {item.description?.length > 80 && !expanded ? (
+                <p>{description}... <b onClick={() => setExpanded(true)}>read more</b></p>
+              ) : (
+                <p>{item.description}</p>
+              )
+              }
             </IonText>
           </IonCol>
           <IonCol size='4' className='home__menu-item-right'>

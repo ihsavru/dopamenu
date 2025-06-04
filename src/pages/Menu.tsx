@@ -21,6 +21,7 @@ import {
 import logoText from "../assets/images/logo-text.png"
 import {
   trashOutline,
+  createOutline,
   chevronDownOutline,
   chevronUpOutline,
 } from "ionicons/icons"
@@ -38,7 +39,7 @@ import { useUserContext } from "../hooks/useUserContext"
 import { queryClient } from "../api/client"
 import { useMutation } from "@tanstack/react-query"
 
-import AddItemModal from "../components/AddItemModal"
+import AddItemModal, { EditItemModal } from "../components/AddItemModal"
 
 type Props = {}
 
@@ -66,11 +67,21 @@ const Item = ({
 
   return (
     <IonItem>
-      <IonBadge color='light' slot='end' onClick={() => deleteItem(item.id)}>
+      <IonBadge color='light' slot='end'>
+        <IonButton
+          id={`edit-${item.id}-modal`}
+          fill='clear'
+          size='small'
+          disabled={isDeleting || isFetching}
+        >
+          <IonIcon aria-hidden='true' icon={createOutline} />
+        </IonButton>
+        <EditItemModal item={item} />
         <IonButton
           fill='clear'
           size='small'
           disabled={isDeleting || isFetching}
+          onClick={() => deleteItem(item.id)}
         >
           <IonIcon aria-hidden='true' icon={trashOutline} />
         </IonButton>

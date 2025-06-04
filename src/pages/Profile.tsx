@@ -42,7 +42,7 @@ const CurrentOrder = ({ order, completeOrder }: { order: Order }) => {
         <IonCardSubtitle>
           <IonChip color='danger'>{order.status}</IonChip>
         </IonCardSubtitle>
-        <IonCardTitle>{order.id}</IonCardTitle>
+        <IonCardTitle>{new Date(order.created_at).toDateString()}</IonCardTitle>
       </IonCardHeader>
 
       <div className='ion-padding'>
@@ -75,7 +75,27 @@ const CurrentOrder = ({ order, completeOrder }: { order: Order }) => {
 const PastOrder = ({ order }: { order: Order }) => {
   return (
     <IonItem>
-      <IonLabel>{order.id}</IonLabel>
+      <IonLabel>
+        <IonText color='dark'>
+          <b>
+            {`${new Date(order.created_at).toLocaleString("en-IN", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })} `}
+          </b>
+        </IonText>
+        <IonText color='primary'>
+          {new Date(order.created_at).toLocaleString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </IonText>
+        <IonText color='medium'>
+          <h4>{order.order_items?.length} items</h4>
+        </IonText>
+      </IonLabel>
       <IonBadge color='success' slot='end'>
         {order.status}
       </IonBadge>

@@ -16,6 +16,15 @@ export const createMenuItem = async (item: MenuItem) => {
   return data
 }
 
+export const updateMenuItem = async (item: MenuItem) => {
+  const { data, error } = await supabase
+    .from("menu_items")
+    .update(item)
+    .eq("id", item.id)
+  if (error) throw new Error(error.message)
+  return data
+}
+
 export const deleteMenuItem = async (id: number) => {
   const { data, error } = await supabase
     .from("menu_items")
