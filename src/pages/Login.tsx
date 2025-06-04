@@ -13,7 +13,7 @@ import {
 } from "@ionic/react"
 import { supabase } from "../supabaseClient"
 import { useIonRouter } from "@ionic/react"
-
+import icon from "../assets/images/icon-foreground.png"
 import "./Login.css"
 
 export function LoginPage() {
@@ -58,11 +58,7 @@ export function LoginPage() {
         color='dark'
         className='ion-display-flex ion-align-items-center ion-padding'
       >
-        <IonImg
-          src='/assets/logo-full.png'
-          alt='logo'
-          className='ion-margin'
-        ></IonImg>
+        <IonImg src={icon} alt='logo' className='ion-margin'></IonImg>
         <IonText color='primary'>
           <p className='ion-text-center ion-padding'>
             A plate full of what makes you feel good

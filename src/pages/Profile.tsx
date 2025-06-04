@@ -20,6 +20,7 @@ import {
   IonCardSubtitle,
   IonCardTitle,
 } from "@ionic/react"
+import logoText from "../assets/images/logo-text.png"
 import { useUserContext } from "../hooks/useUserContext"
 
 import { useIonRouter } from "@ionic/react"
@@ -135,7 +136,7 @@ const Profile: React.FC<Props> = () => {
         <IonToolbar color='dark'>
           <IonTitle>
             <IonImg
-              src='/assets/logo-text.png'
+              src={logoText}
               alt='logo'
               className='ion-margin ion-padding'
             ></IonImg>

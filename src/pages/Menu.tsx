@@ -18,6 +18,7 @@ import {
   IonIcon,
   IonItem,
 } from "@ionic/react"
+import logoText from "../assets/images/logo-text.png"
 import {
   trashOutline,
   chevronDownOutline,
@@ -162,7 +163,7 @@ const Menu: React.FC<Props> = () => {
         <IonToolbar color='dark'>
           <IonTitle>
             <IonImg
-              src='/assets/logo-text.png'
+              src={logoText}
               alt='logo'
               className='ion-margin ion-padding'
             ></IonImg>

@@ -23,6 +23,7 @@ import {
   IonItem,
   IonIcon,
 } from "@ionic/react"
+import logoText from "../assets/images/logo-text.png"
 import { addOutline, checkmarkOutline } from "ionicons/icons"
 import { Link } from "react-router-dom"
 import "./Home.css"
@@ -213,10 +214,10 @@ const Home: React.FC<Props> = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="dark">
+        <IonToolbar color='dark'>
           <IonTitle>
             <IonImg
-              src='/assets/logo-text.png'
+              src={logoText}
               alt='logo'
               className='ion-margin ion-padding'
             ></IonImg>
